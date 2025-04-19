@@ -10,17 +10,52 @@ public class DSEList implements List {
 	
 	public Node head;
 	private Node tail;
+	private int size;
 
-	public DSEList() {
-		
-	}
+	
+	// Blank constructor
+    public DSEList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    //Constructor accepting node containing a string object
 	public DSEList(Node head_) {
+		this.head = head_;
+        this.tail = head_;
+        this.size = 1;
 	}
 	
+	//deep copy constructor
 	//Takes a list then adds each element into a new list
-	public DSEList(DSEList other) { // Copy constructor. 
-	}
+    public DSEList(DSEList other) {
+        if (other == null || other.head == null) {
+            this.head = null;
+            this.tail = null;
+            this.size = 0;
+            return;
+        }
 
+        Node current = other.head;
+        Node prevNewNode = null;
+
+        while (current != null) {
+            Node newNode = new Node(null, prevNewNode, current.getString());
+            if (prevNewNode == null) {
+                this.head = newNode;
+            } else {
+                prevNewNode.next = newNode;
+            }
+            prevNewNode = newNode;
+            current = current.next;
+        }
+
+        this.tail = prevNewNode;
+        this.size = other.size;
+    }
+	
+	
 	//remove the String at the parameter's index
 	public String remove(int index) {
 
