@@ -6,12 +6,16 @@ import unisa.dse.a2.interfaces.ListGeneric;
  * @author simont
  *
  */
-public class DSEListGeneric implements ListGeneric {
+public class DSEListGeneric<T> implements ListGeneric<T> {
 	
-	public NodeGeneric head;
-	private NodeGeneric tail;
+	public NodeGeneric<T> head;
+	private NodeGeneric<T> tail;
+	private int size;
 
 	public DSEListGeneric() {
+		this.head = null;
+		this.tail = null;
+		this.size = 0;
 		
 	}
 	public DSEListGeneric(NodeGeneric head_) {

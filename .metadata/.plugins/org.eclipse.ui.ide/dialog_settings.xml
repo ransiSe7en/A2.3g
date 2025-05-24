@@ -23,4 +23,12 @@
 			<item value="D:\UNISA SP2\1.DSE 2012\Assisgnments\A2\A2.3g"/>
 		</list>
 	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="154"/>
+		<item key="DIALOG_Y_ORIGIN" value="-19"/>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
 </section>
