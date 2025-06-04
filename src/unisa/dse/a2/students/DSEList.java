@@ -22,10 +22,17 @@ public class DSEList implements List {
 
     //Constructor accepting node containing a string object
 	public DSEList(Node head_) {
-		this.head = head_;
-        this.tail = head_;
-        this.size = 1;
+	    this.head = head_;
+	    Node current = head_;
+	    this.size = 0;
+	    //Count nodes and set the tail
+	    while (current != null) {
+	        this.tail = current;
+	        this.size++;
+	        current = current.next;
+	    }
 	}
+
 	
 	//deep copy constructor
 	//Takes a list then adds each element into a new list
@@ -99,7 +106,7 @@ public class DSEList implements List {
 	//returns String at parameter's index
 	public String get(int index) {
 	    if (index < 0 || index >= size) {
-	        throw new IndexOutOfBoundsException("Index out of bounds");
+	        return null;
 	    }
 	    Node current = head;
 	    for (int i = 0; i < index; i++) {
@@ -107,7 +114,6 @@ public class DSEList implements List {
 	    }
 	    return current.getString();
 	}
-
 
 	//checks if there is a list
 	public boolean isEmpty() {
@@ -152,20 +158,86 @@ public class DSEList implements List {
 
 	//add String at parameter's index
 	public boolean add(int index, String obj) {
+		if (index < 0 || index > size) {
+	        throw new IndexOutOfBoundsException("Invalid Index");
+	    }
+
+	    Node newNode;
+	    if (index == size) {
+	    	// Append if at the end
+	        return add(obj); 
+	    } else if (index == 0) {
+	        newNode = new Node(head, null, obj);
+	        if (head != null) {
+	            head.prev = newNode;
+	        }
+	        head = newNode;
+	        if (tail == null) {
+	            tail = newNode;
+	        }
+	    } else {
+	        Node current = head;
+	        for (int i = 0; i < index; i++) {
+	            current = current.next;
+	        }
+	        newNode = new Node(current, current.prev, obj);
+	        if (current.prev != null) {
+	            current.prev.next = newNode;
+	        }
+	        current.prev = newNode;
+	        // Connect new node to the current node
+	        newNode.next = current;
+	    }
+
+	    size++;
+	    return true;
 	}
 
+	
 	//searches list for parameter's String return true if found
 	public boolean contains(String obj) {
+		return indexOf(obj) != -1;
 	}
-
+	
 	//removes the parameter's String form the list
 	public boolean remove(String obj) {
+		Node current = head;
+
+	    while (current != null) {
+	        if (current.getString().equals(obj)) {
+	            if (current.prev != null) {
+	                current.prev.next = current.next;
+	            } else {
+	                head = current.next;
+	            }
+
+	            if (current.next != null) {
+	                current.next.prev = current.prev;
+	            } else {
+	                tail = current.prev;
+	            }
+
+	            size--;
+	            return true;
+	        }
+	        current = current.next;
+	    }
+	    // not found
+	    return false; 
 	}
+	
 	
 	@Override
 	public int hashCode() {
-		return 0;
+	    int hash = 1;
+	    Node current = head;
+	    while (current != null) {
+	        hash = 31 * hash + (current.getString() == null ? 0 : current.getString().hashCode());
+	        current = current.next;
+	    }
+	    return hash;
 	}
+
 
 	//check if 2 lists are identical
 	@Override
