@@ -8,12 +8,13 @@ public class Trade implements Comparable<Trade> {
 	 */
 	private long tradeId = -1;
 	private long created;
-
+	
 	/**
 	 * @return Track the moment in time this Trade was created
 	 */
-	public void getCreated()
+	public long getCreated()
 	{
+		return created;
 	}
 	
 	public String listedCompanyCode;
@@ -21,7 +22,8 @@ public class Trade implements Comparable<Trade> {
 	/**
 	 * @return The company's code
 	 */
-	public void getCompanyCode() {
+	public String getCompanyCode() {
+		return listedCompanyCode;
 	}
 	
 	private int shareQuantity;
@@ -29,15 +31,17 @@ public class Trade implements Comparable<Trade> {
 	/**
 	 * @return The quantity of shares to trade
 	 */
-	public void getShareQuantity() {
+	public int getShareQuantity() {
+		return shareQuantity;
 	}
-
+	
 	private StockBroker broker;
 
 	/**
 	 * @return The broker associated with this trade
 	 */
-	public void getStockBroker() {
+	public StockBroker getStockBroker() {
+		 return broker;
 	}
 
 
@@ -48,6 +52,7 @@ public class Trade implements Comparable<Trade> {
 	{
 		created = System.nanoTime(); //do not change this
 		tradeId = id; //do not change this
+		this.broker = broker;
 		try { Thread.sleep(100); } catch (Exception x) {}
 	}
 	
@@ -63,6 +68,9 @@ public class Trade implements Comparable<Trade> {
 	{
 		created = System.nanoTime(); //do not change this
 		tradeId = System.nanoTime(); //do not change this
+		this.broker = broker;
+	    this.listedCompanyCode = listedCompanyCode;
+	    this.shareQuantity = shareQuantity;
 		try { Thread.sleep(100); } catch (Exception x) {}
 	}
 	
@@ -81,8 +89,16 @@ public class Trade implements Comparable<Trade> {
 	 */
 	public int compareTo(Trade t)
 	{
+		boolean thisOnWatchlist = this.broker.onWatchlist(this.listedCompanyCode);
+        boolean otherOnWatchlist = t.broker.onWatchlist(t.listedCompanyCode);
+
+        if (thisOnWatchlist && otherOnWatchlist) return 0;
+        if (thisOnWatchlist) return 1;
+        if (otherOnWatchlist) return -1;
+
+        // If neither is on the watchlist, compare creation time
+        return Long.compare(this.created, t.created);
 	}
-	
 
 	/***
 	 * Do not modify this toString, it is used for testing purposes

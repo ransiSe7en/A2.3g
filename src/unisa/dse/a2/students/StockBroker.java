@@ -30,7 +30,22 @@ public class StockBroker {
 	 */
 	public boolean addWatchlist(String companyCode)
 	{
+		if (companyCode == null || watchList.contains(companyCode)) {
+            return false;
+        }
+        watchList.add(companyCode);
+        return true;
 	}
+	
+	/**
+	 * Checks if the company code is on the broker's watchlist 
+	 * @param companyCode The code of the company to check
+	 * @return true if the company is on the watchlist
+	 */
+	public boolean onWatchlist(String companyCode) {
+	    return watchList.contains(companyCode);
+	}
+
 	
 	private String name;
 
@@ -39,6 +54,7 @@ public class StockBroker {
 	 * @return
 	 */
 	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -47,6 +63,7 @@ public class StockBroker {
 	 */
 	public StockBroker(String name)
 	{
+		this.name=name;
 	}
 	
 	/**
@@ -56,6 +73,11 @@ public class StockBroker {
 	 */
 	public boolean placeOrder(Trade order)
 	{
+		if (order == null || pendingTrades.contains(order)) {
+            return false;
+        }
+        pendingTrades.add(order);
+        return true;
 	}
 	
 	/**
@@ -64,6 +86,7 @@ public class StockBroker {
 	 */
 	public Trade getNextTrade()
 	{
+		 return pendingTrades.poll();
 	}
 	
 	/**
@@ -71,7 +94,9 @@ public class StockBroker {
 	 */
 	public int getPendingTradeCount()
 	{
+		return pendingTrades.size();
 	}
+	
 
 	/**
 	 * Do not modify this equals, it is used for testing purposes
