@@ -4,18 +4,17 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import unisa.dse.a2.interfaces.ListGeneric;
+import unisa.dse.a2.students.UntradedCompanyException;
 
 public class SecuritiesExchange {
 
 	/**
 	 * Exchange name
 	 */
-	private String name;
-	private ListGeneric<StockBroker> brokers;
-	private ListGeneric<String> announcements;
-	public HashMap<String, ListedCompany> companies;
+	private String name;	
 	
 	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -39,6 +38,10 @@ public class SecuritiesExchange {
 	 */
 	public SecuritiesExchange(String name)
 	{
+		this.name = name;
+		this.brokers = new DSEListGeneric<>();
+		this.announcements = new DSEListGeneric<>();
+		this.companies = new HashMap<>();
 	}
 	
 	/**
@@ -84,12 +87,34 @@ public class SecuritiesExchange {
 	 * @return The number of successful trades completed across all brokers
 	 * @throws UntradedCompanyException when traded company is not listed on this exchange
 	 */
-	public int processTradeRound()
-	{
+	public int processTradeRound() throws UntradedCompanyException {
+		int tradesProcessed = 0;
+
+		for (int i = 0; i < brokers.size(); i++) {
+			StockBroker broker = brokers.get(i);
+			Trade trade = broker.getNextTrade();
+			if (trade == null) continue;
+
+			String code = trade.getCompanyCode();
+			if (!companies.containsKey(code)) {
+				throw new UntradedCompanyException(code);
+			}
+
+			ListedCompany company = companies.get(code);
+			int priceBefore = company.getCurrentPrice();
+			company.processTrade(trade.getShareQuantity());
+			
+
+			String announcement = "Trade: " + trade.getShareQuantity() + " " + code + " @ " + priceBefore + " via " + broker.getName();
+			announcements.add(announcement);
+			tradesProcessed++;
+		}
+		return tradesProcessed;
 	}
+
 	
 	public int runCommandLineExchange(Scanner sc)
 	{
-		
+		return 0;
 	}
 }
